@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+</head>
+<body>
+    <link rel="stylesheet" href="style.css">
+    <div class="card">
+        <div class="search">
+            <input type="text" id="city" placeholder="Enter city name">
+            <button onclick="searchWeather()"><img src="searchicon.jpg" alt="Search"></button>
+        </div>
+        <div class="weather">
+            <img src="weather-forecast-symbol-v7o.png" class="weather-icon" alt="Weather Icon">
+            <h1 class="temp"></h1>
+            <h2 class="city"></h2>
+            <div class="details">
+                <div class="col">
+                    <img src="humidity.png" alt="Humidity Icon">
+                    <div>
+                        <p class="Humidity"></p>
+                        <p>Humidity</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <img src="wind-icon-png-2.jpg" alt="Wind Icon">
+                    <div>
+                        <p class="wind"></p>
+                        <p>Wind Speed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const apiKey = "4954b4cc8a47da444a75bd0ddb5ab93e";
+        const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+        const searchBox = document.getElementById("city");
+        const weatherIcon = document.querySelector(".weather-icon");
+        const temp = document.querySelector(".temp");
+        const city = document.querySelector(".city");
+        const humidity = document.querySelector(".Humidity");
+        const wind = document.querySelector(".wind");
+
+        function searchWeather() {
+            const cityValue = searchBox.value;
+            if (cityValue) {
+                fetch(apiUrl + cityValue + "&appid=" + apiKey)
+                    .then(response => {
+                        if (response.status === 200) {
+                            return response.json();
+                        } else {
+                            // Display "Place not valid" message when the city is not found
+                            return Promise.reject("Place not valid");
+                        }
+                    })
+                    .then(data => {
+                        city.innerHTML = data.name;
+                        temp.innerHTML = Math.round(data.main.temp) + "°C";
+                        humidity.innerHTML = data.main.humidity + "%";
+                        wind.innerHTML = data.wind.speed + " km/h";
+                        weatherIcon.src = "weather-forecast-symbol-v7o.png";
+                    })
+                    .catch(error => {
+                        if (error === "Place not valid") {
+                            city.innerHTML = "Place not valid";
+                            temp.innerHTML = "";
+                            humidity.innerHTML = "";
+                            wind.innerHTML = "";
+                            weatherIcon.src = "weather-forecast-symbol-v7o.png";
+                        } else {
+                            console.error("An error occurred: " + error);
+                            document.querySelector(".weather").style.display = "none";
+                        }
+                    });
+            }
+        }
+    </script>
+</body>
+</html>
