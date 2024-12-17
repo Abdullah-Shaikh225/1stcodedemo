@@ -1,4 +1,4 @@
-# Weather forecast webapplication
+# Weather forecast Web Application
 This is my first code in github
 <br>
 Trying to push my first code in github 
